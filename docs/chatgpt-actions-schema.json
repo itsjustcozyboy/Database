@@ -1,0 +1,83 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Supabase Auto-Ingest API",
+    "description": "자연어로 Supabase 칸반 테이블에 데이터를 자동 추가/할당합니다.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "{{NGROK_URL}}",
+      "description": "로컬 개발 서버 (ngrok 공개 URL)"
+    }
+  ],
+  "paths": {
+    "/ingest": {
+      "post": {
+        "operationId": "ingestData",
+        "summary": "자연어로 Supabase에 데이터 추가",
+        "description": "Chat으로 입력한 자연어를 ChatGPT가 JSON 작업으로 변환해서 Supabase에 저장",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "description": "추가할 작업에 대한 자연어 설명 (예: '조리 단계에 두부 굽기 추가하고 김소윤에게 할당')",
+                    "example": "조리 단계에 두부 굽기 작업 추가하고 김소윤에게 할당"
+                  },
+                  "board_id": {
+                    "type": "integer",
+                    "description": "보드 ID (기본값: 1)",
+                    "default": 1
+                  },
+                  "dry_run": {
+                    "type": "boolean",
+                    "description": "true이면 DB에 저장하지 않고 계획만 확인",
+                    "default": false
+                  }
+                },
+                "required": ["text"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "성공적으로 처리됨",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "board_id": {
+                      "type": "integer"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "요청 오류"
+          }
+        }
+      }
+    }
+  }
+}

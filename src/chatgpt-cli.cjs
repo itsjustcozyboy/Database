@@ -1,4 +1,4 @@
-const { processNaturalLanguageToSupabase } = require('./openclaw-agent.cjs');
+const { processNaturalLanguageToSupabase } = require('./chatgpt-agent.cjs');
 
 async function main() {
   const args = process.argv.slice(2);

@@ -1,7 +1,7 @@
 const http = require('http');
-const { processNaturalLanguageToSupabase } = require('./openclaw-agent.cjs');
+const { processNaturalLanguageToSupabase } = require('./chatgpt-agent.cjs');
 
-const PORT = Number(process.env.OPENCLAW_INGEST_PORT || 8787);
+const PORT = Number(process.env.CHATGPT_INGEST_PORT || 8787);
 
 function json(res, status, body) {
   const payload = JSON.stringify(body, null, 2);

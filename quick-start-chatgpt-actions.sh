@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# ChatGPT GPT Actions 빠른 시작 스크립트
+
+echo "🚀 ChatGPT GPT Actions 설정 시작"
+echo ""
+echo "📋 단계별 실행:"
+echo ""
+echo "터미널 1 - 로컬 서버 시작:"
+echo "  npm run chatgpt:server"
+echo ""
+echo "터미널 2 - ngrok으로 공개 URL 생성:"
+echo "  ngrok http 8787"
+echo ""
+echo "✨ ngrok 출력에서 공개 URL 복사 (예: https://abc123.ngrok.io)"
+echo ""
+echo "🔗 ChatGPT GPT Actions 설정:"
+echo "  1. https://chatgpt.com/gpts 접속"
+echo "  2. GPT 편집 → Configure → Actions"
+echo "  3. Create new action"
+echo "  4. Schema에 아래 파일의 내용 복사:"
+echo "     docs/chatgpt-actions-schema.json"
+echo "  5. 파일의 {{NGROK_URL}}을 실제 ngrok URL로 교체"
+echo ""
+echo "🎯 테스트:"
+echo "  ChatGPT GPT에 입력: '조리 단계에 두부 굽기 추가하고 김소윤에게 할당'"
+echo ""
+echo "📖 자세한 가이드: docs/CHATGPT_ACTIONS_GUIDE.md"
