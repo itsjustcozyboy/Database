@@ -1,0 +1,16 @@
+{
+  "name": "database-supabase",
+  "version": "1.0.0",
+  "description": "Supabase Database Schema Management",
+  "scripts": {
+    "supabase:link": "supabase link --project-ref aflupgcisjkptsehrgeo",
+    "supabase:push": "supabase db push",
+    "supabase:pull": "supabase db pull",
+    "supabase:start": "supabase start",
+    "supabase:stop": "supabase stop",
+    "db:push": "export $(cat .env.local | xargs) && npx supabase db push"
+  },
+  "devDependencies": {
+    "supabase": "latest"
+  }
+}

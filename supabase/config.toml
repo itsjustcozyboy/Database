@@ -1,0 +1,17 @@
+# Supabase CLI Configuration
+# https://supabase.com/docs/reference/cli/config
+
+[api]
+enabled = true
+
+[db]
+# 로컬 개발 시 포트 (기본값: 54321)
+port = 54321
+
+[studio]
+# Supabase Studio 접근 포트 (기본값: 3000)
+port = 3000
+
+[functions]
+# Edge Functions 포트 (기본값: 54321)
+# verify_jwt = false
