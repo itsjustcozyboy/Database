@@ -11,6 +11,8 @@
 -- ============================================================================
 
 -- 기존 kanban_column 데이터를 백업하고 새 구조의 테이블 생성
+DROP TABLE IF EXISTS kanban_column_new;
+
 CREATE TABLE kanban_column_new (
   column_id TEXT PRIMARY KEY,
   board_id BIGINT NOT NULL REFERENCES kanban_board(board_id) ON DELETE CASCADE,
@@ -40,11 +42,25 @@ FROM kanban_column;
 
 -- 먼저 kanban_card에서 FK 제약조건 제거
 ALTER TABLE kanban_card
-DROP CONSTRAINT kanban_card_column_id_fkey;
+DROP CONSTRAINT IF EXISTS kanban_card_column_id_fkey;
 
--- kanban_card의 column_id 데이터타입을 TEXT로 변경하고 값 업데이트
+-- kanban_card에 새 TEXT 컬럼을 만들고 기존 numeric column_id를 column_key로 매핑
 ALTER TABLE kanban_card
-ALTER COLUMN column_id TYPE TEXT USING column_key::TEXT;
+ADD COLUMN column_id_new TEXT;
+
+UPDATE kanban_card kc
+SET column_id_new = c.column_key
+FROM kanban_column c
+WHERE kc.column_id = c.column_id;
+
+ALTER TABLE kanban_card
+DROP COLUMN column_id;
+
+ALTER TABLE kanban_card
+RENAME COLUMN column_id_new TO column_id;
+
+ALTER TABLE kanban_card
+ALTER COLUMN column_id SET NOT NULL;
 
 -- 새로운 FK 제약조건 추가
 ALTER TABLE kanban_card
@@ -95,7 +111,7 @@ ORDER BY c.position;
 --   column_id: BIGINT(1,2,3,4) → TEXT('preparation', 'cooking_in_progress', 'ready_to_serve', 'completed')
 --   
 -- kanban_card 테이블 변경:
---   column_id FK: BIGINT → TEXT (자동으로 변환됨)
+--   column_id FK: BIGINT → TEXT (kanban_column.column_key 기준으로 매핑)
 --
 -- 의미있는 텍스트 키:
 --   'preparation'         → 재료 손질 및 준비
