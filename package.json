@@ -8,9 +8,15 @@
     "supabase:pull": "supabase db pull",
     "supabase:start": "supabase start",
     "supabase:stop": "supabase stop",
-    "db:push": "export $(cat .env.local | xargs) && npx supabase db push"
+    "db:push": "export $(cat .env.local | xargs) && npx supabase db push",
+    "openclaw:server": "node src/openclaw-server.cjs",
+    "openclaw:ingest": "node src/openclaw-cli.cjs"
   },
   "devDependencies": {
     "supabase": "latest"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.100.1",
+    "openai": "^6.33.0"
   }
 }

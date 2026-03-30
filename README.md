@@ -133,3 +133,60 @@ erDiagram
 ## 핵심 요약
 이 ERD는 "칸반 운영에 필요한 최소 구조"를 유지하면서,
 GitHub 이슈 연동과 역할 분담까지 가능한 형태로 확장한 모델입니다.
+
+## ChatGPT 연동 자동 입력 시스템
+ChatGPT가 자연어 요청을 해석하고 Supabase에 데이터를 자동 추가/할당하도록 구성했습니다.
+
+### 동작 방식
+1. 입력 문장 수신 (예: "조리 단계에 두부 굽기 카드 추가하고 김소윤에게 할당")
+2. ChatGPT가 JSON 작업 계획으로 변환
+3. 서버가 계획을 검증 후 Supabase에 반영
+
+### 준비
+1. `.env.local`에 Supabase 키와 ChatGPT API 키 추가
+   ```bash
+   OPENAI_API_KEY=sk-your-api-key-here
+   ```
+2. OpenAI API 계정 및 API 키 준비
+
+### 실행
+```bash
+# 서버 모드 (HTTP)
+npm run openclaw:server
+
+# 단건 실행 (CLI)
+npm run openclaw:ingest -- "조리 단계에 두부 굽기 작업 추가하고 김소윤에게 할당"
+
+# DB 반영 없이 계획만 확인
+npm run openclaw:ingest -- "완료 단계에 기록 카드 추가" --dry-run
+```
+
+### HTTP API 예시
+```bash
+curl -X POST http://localhost:8787/ingest \
+  -H "Content-Type: application/json" \
+  -d '{
+    "text": "준비 단계에 참기름 확인 카드 추가하고 김정환에게 할당",
+    "board_id": 1,
+    "dry_run": false
+  }'
+```
+
+### 지원 작업 타입
+- `create_task`: 작업 카드 생성
+- `assign_member`: 기존 작업에 담당자 할당
+- `create_member`: 신규 팀원 생성
+
+### 자연어 예시
+```
+- "준비 단계에 봄동씻기 카드 추가"
+- "조리 단계에 두부 굽기 추가하고 김소윤에게 할당"
+- "담기 준비 단계에 플레이팅 체크 추가. 마감은 내일"
+- "김채우를 팀에 추가해줘"
+- "버섯 볶기 작업을 김정환에게 할당"
+```
+
+관련 파일:
+- `src/openclaw-agent.cjs`
+- `src/openclaw-server.cjs`
+- `src/openclaw-cli.cjs`
