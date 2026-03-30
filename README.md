@@ -49,60 +49,37 @@
 
 ## 📊 ERD (Entity Relationship Diagram)
 
-### 논리 관계도
+### 논리 관계도 - 텍스트 표현
 
-```mermaid
-erDiagram
-    RECIPE_BOARD ||--o{ RECIPE_STEP : contains
-    RECIPE_BOARD ||--o{ RECIPE_TASK : has
-    RECIPE_BOARD ||--o{ TEAM_MEMBER : includes
-    RECIPE_STEP ||--o{ RECIPE_TASK : organizes
-    TEAM_MEMBER }o--o{ RECIPE_TASK : assigned_to
+엔티티 관계도 (한눈에 보기):
 
-    RECIPE_BOARD {
-        bigint board_id PK
-        text board_name
-        text description
-        text source_url UK
-        timestamp created_at
-    }
-
-    RECIPE_STEP {
-        text column_id PK
-        bigint board_id FK
-        text column_name
-        int order_position UK
-    }
-
-    RECIPE_TASK {
-        bigint card_id PK
-        bigint board_id FK
-        text step_id FK
-        text title
-        text description
-        date due_date
-        int order_position
-        boolean is_done
-        int github_issue_number
-        timestamp created_at
-    }
-
-    TEAM_MEMBER {
-        bigint member_id PK
-        bigint board_id FK
-        text member_name
-        text role
-        timestamp created_at
-    }
-
-    TASK_ASSIGNMENT {
-        bigint task_id FK PK
-        bigint member_id FK PK
-        timestamp assigned_at
-    }
+```
+┌──────────────────────────────────────────────────────────────┐
+│                    RECIPE_BOARD (1개)                        │
+│  board_id | board_name | source_url | created_at            │
+└──────────────────────────────────────────────────────────────┘
+     │ 1:N              │ 1:N              │ 1:N
+     ├─────────────────┼─────────────────┤
+     ↓                 ↓                 ↓
+┌──────────────┐  ┌──────────────┐  ┌──────────────┐
+│RECIPE_STEP   │  │ RECIPE_TASK  │  │TEAM_MEMBER   │
+│(4개 단계)    │  │ (16개 작업)  │  │ (3명 팀원)   │
+├──────────────┤  ├──────────────┤  ├──────────────┤
+│ column_id PK │  │ card_id PK   │  │member_id PK  │
+│ board_id FK  │  │ board_id FK  │  │board_id FK   │
+│ column_name  │  │ step_id FK   │  │member_name   │
+│ order_pos    │  │ title        │  │ role         │
+└──────────────┘  │ due_date     │  └──────────────┘
+     │ 1:N        │ is_done      │        │
+     │            │ github_iss   │        │ N:M
+     └────────────┼──────────────┴────────┘
+                  ↓
+          TASK_ASSIGNMENT
+         (16개 할당 관계)
+        task_id FK | member_id FK
 ```
 
-### 관계도 설명
+### 엔티티 정의 설명
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
